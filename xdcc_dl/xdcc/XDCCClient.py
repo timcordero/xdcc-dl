@@ -572,6 +572,7 @@ class XDCCClient(SimpleIRCClient):
 
         printing = self.downloading and not self.disconnected
         while printing:
+            speed = "0B/s"
             printing = self.downloading and not self.disconnected
 
             speed_progress.append({
@@ -585,10 +586,9 @@ class XDCCClient(SimpleIRCClient):
             if len(speed_progress) > 0:
                 bytes_delta = self.progress - speed_progress[0]["progress"]
                 time_delta = time.time() - speed_progress[0]["timestamp"]
-                ratio = int(bytes_delta / time_delta)
-                speed = human_readable_bytes(ratio) + "/s"
-            else:
-                speed = "0B/s"
+                if time_delta > 0:
+                    ratio = int(bytes_delta / time_delta)
+                    speed = human_readable_bytes(ratio) + "/s"
 
             percentage = "%.2f" % (100 * (self.progress / self.filesize))
 
